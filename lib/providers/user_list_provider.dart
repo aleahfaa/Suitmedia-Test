@@ -11,6 +11,7 @@ class UserListProvider with ChangeNotifier {
   bool _isRefreshing = false;
   bool _hasError = false;
   String _errorMessage = '';
+  String? _paginateErrorMessage;
   int _currentPage = 1;
   bool _hasMore = true;
   List<User> get users => _users;
@@ -19,6 +20,11 @@ class UserListProvider with ChangeNotifier {
   bool get hasMore => _hasMore;
   bool get hasError => _hasError;
   String get errorMessage => _errorMessage;
+  String? get paginateErrorMessage => _paginateErrorMessage;
+
+  void clearPaginateError() {
+    _paginateErrorMessage = null;
+  }
   Future<void> fetchUsers({bool refresh = false}) async {
     if (_isLoading || _isRefreshing) return;
     if (refresh) {
@@ -61,8 +67,12 @@ class UserListProvider with ChangeNotifier {
         if (kDebugMode) print('Failed to load users: ${response.statusCode}');
       }
     } catch (e) {
-      _hasError = _users.isEmpty;
-      _errorMessage = _friendlyError(e);
+      if (_users.isEmpty) {
+        _hasError = true;
+        _errorMessage = _friendlyError(e);
+      } else {
+        _paginateErrorMessage = _friendlyError(e);
+      }
       if (kDebugMode) print('Error fetching users: $e');
     } finally {
       _isLoading = false;

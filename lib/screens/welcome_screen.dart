@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:suitmedia_test/core/app_colors.dart';
-import '../controllers/welcome_controller.dart';
+import '../core/app_colors.dart';
+import '../core/palindrome.dart';
 import '../providers/app_state.dart';
 import '../widgets/app_button.dart';
 import '../widgets/app_text_field.dart';
@@ -17,7 +17,6 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _palindromeController = TextEditingController();
-  final WelcomeController _controller = WelcomeController();
   @override
   void dispose() {
     _nameController.dispose();
@@ -36,7 +35,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       );
       return;
     }
-    final bool isPal = _controller.isPalindrome(text);
+    final bool isPal = isPalindrome(text);
     showDialog(
       context: context,
       barrierDismissible: true,

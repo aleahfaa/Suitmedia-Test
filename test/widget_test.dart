@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:suitmedia_test/controllers/welcome_controller.dart';
+import 'package:suitmedia_test/core/palindrome.dart';
 import 'package:suitmedia_test/main.dart';
 import 'package:suitmedia_test/models/user_model.dart';
 import 'package:suitmedia_test/providers/app_state.dart';
@@ -20,20 +20,18 @@ class _FakeUserListProvider extends UserListProvider {
 // WelcomeController unit tests
 // ---------------------------------------------------------------------------
 void main() {
-  group('WelcomeController — palindrome logic', () {
-    final ctrl = WelcomeController();
-
-    test('empty string returns false', () => expect(ctrl.isPalindrome(''), false));
-    test('single character returns true', () => expect(ctrl.isPalindrome('a'), true));
-    test('simple palindrome', () => expect(ctrl.isPalindrome('racecar'), true));
-    test('palindrome with spaces', () => expect(ctrl.isPalindrome('kasur rusak'), true));
+  group('isPalindrome — palindrome logic', () {
+    test('empty string returns false', () => expect(isPalindrome(''), false));
+    test('single character returns true', () => expect(isPalindrome('a'), true));
+    test('simple palindrome', () => expect(isPalindrome('racecar'), true));
+    test('palindrome with spaces', () => expect(isPalindrome('kasur rusak'), true));
     test('palindrome with spaces and mixed case', () {
-      expect(ctrl.isPalindrome('A man, a plan, a canal: Panama'), true);
+      expect(isPalindrome('A man, a plan, a canal: Panama'), true);
     });
-    test('step on no pets', () => expect(ctrl.isPalindrome('step on no pets'), true));
-    test('put it up', () => expect(ctrl.isPalindrome('put it up'), true));
-    test('non-palindrome', () => expect(ctrl.isPalindrome('suitmedia'), false));
-    test('hello is not palindrome', () => expect(ctrl.isPalindrome('hello'), false));
+    test('step on no pets', () => expect(isPalindrome('step on no pets'), true));
+    test('put it up', () => expect(isPalindrome('put it up'), true));
+    test('non-palindrome', () => expect(isPalindrome('suitmedia'), false));
+    test('hello is not palindrome', () => expect(isPalindrome('hello'), false));
   });
 
   // ---------------------------------------------------------------------------

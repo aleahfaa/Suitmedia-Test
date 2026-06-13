@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/app_colors.dart';
@@ -19,32 +20,28 @@ class UserListItem extends StatelessWidget {
           child: Row(
             children: [
               ClipOval(
-                child: Image.network(
-                  user.avatar,
+                child: CachedNetworkImage(
+                  imageUrl: user.avatar,
                   width: 49,
                   height: 49,
                   fit: BoxFit.cover,
-                  semanticLabel: '${user.fullName} avatar',
-                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                  placeholder: (context, url) => Container(
+                    width: 49,
+                    height: 49,
+                    color: AppColors.shimmerBase,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
                     'assets/third/profile_picture.jpg',
                     width: 49,
                     height: 49,
                     fit: BoxFit.cover,
                   ),
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      width: 49,
-                      height: 49,
-                      color: AppColors.shimmerBase,
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    );
-                  },
                 ),
               ),
               const SizedBox(width: 20),

@@ -17,23 +17,47 @@ class UserListScreen extends StatefulWidget {
 
 class _UserListScreenState extends State<UserListScreen> {
   final ScrollController _scrollController = ScrollController();
+  UserListProvider? _provider;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<UserListProvider>(
-        context,
-        listen: false,
-      ).fetchUsers(refresh: true);
-    });
     _scrollController.addListener(_onScroll);
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_provider == null) {
+      _provider = Provider.of<UserListProvider>(context, listen: false);
+      _provider!.addListener(_onProviderChanged);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _provider!.fetchUsers(refresh: true);
+      });
+    }
+  }
+
+  @override
   void dispose() {
+    _provider?.removeListener(_onProviderChanged);
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onProviderChanged() {
+    final error = _provider?.paginateErrorMessage;
+    if (error != null) {
+      _provider?.clearPaginateError();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    }
   }
 
   void _onScroll() {
@@ -52,9 +76,9 @@ class _UserListScreenState extends State<UserListScreen> {
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       itemCount: 6,
-      separatorBuilder: (_, __) =>
+      separatorBuilder: (_, _) =>
           const Divider(color: AppColors.divider, height: 1, thickness: 0.5),
-      itemBuilder: (_, __) => const ShimmerUserItem(),
+      itemBuilder: (_, _) => const ShimmerUserItem(),
     );
   }
 
